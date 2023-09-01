@@ -27,8 +27,21 @@ goto end
 
 :okParams
 mkdir "%2"
-mkdir "%2\.metadata\.plugins\org.eclipse.core.runtime\.settings"
-copy "%1\.metadata\.plugins\org.eclipse.core.runtime\.settings\" "%2\.metadata\.plugins\org.eclipse.core.runtime\.settings\"
+
+rem Define list of directories to copy to the new workspace (Files and sub-directories will be copied)
+set "directories=.metadata\.plugins\org.eclipse.core.runtime\.settings"
+set "directories=%directories%;.metadata\.plugins\org.eclipse.debug.core\.launches"
+set "directories=%directories%;.metadata\.plugins\org.eclipse.debug.ui"
+set "directories=%directories%;.metadata\.plugins\org.eclipse.wst.server.core"
+set "directories=%directories%;.metadata\.plugins\org.jboss.ide.eclipse.as.core"
+
+rem Copy directories to the new workspace
+for %%a in (%directories%) do ( 
+rem echo %%a
+ mkdir "%2\%%a"
+ xcopy "%1\%%a" /E "%2\%%a"
+)
+
 echo New workspace created. Now start your Eclipse and point it to the %2 workspace
 
 :end
